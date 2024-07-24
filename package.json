@@ -4,11 +4,14 @@
   "description": "All auth services",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node src/server.ts",
+    "format:check": "prettier . --check",
+    "format:fix": "prettier . --write"
   },
   "author": "Aidtya verma <vermaaditya860@gmail.com>",
   "license": "ISC",
   "devDependencies": {
+    "prettier": "3.3.3",
     "typescript": "^5.5.4"
   }
 }
