@@ -4,7 +4,7 @@
     "description": "All auth services",
     "main": "index.js",
     "scripts": {
-        "dev": "node src/server.ts",
+        "dev": "nodemon src/server.ts",
         "format:check": "prettier . --check",
         "format:fix": "prettier . --write"
     },
@@ -12,9 +12,12 @@
     "license": "ISC",
     "devDependencies": {
         "@types/eslint__js": "^8.42.3",
+        "@types/express": "^5.0.0",
         "@types/node": "^22.9.1",
+        "nodemon": "^3.1.7",
         "prettier": "3.3.3",
-        "typescript": "^5.5.4"
+        "ts-node": "^10.9.2",
+        "typescript": "^5.6.3"
     },
     "lint-staged": {
         "*.ts": [
@@ -22,6 +25,7 @@
         ]
     },
     "dependencies": {
-        "dotenv": "^16.4.5"
+        "dotenv": "^16.4.5",
+        "express": "^4.21.1"
     }
 }
