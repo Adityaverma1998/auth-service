@@ -1,23 +1,27 @@
 {
-  "name": "auth-service",
-  "version": "1.0.0",
-  "description": "All auth services",
-  "main": "index.js",
-  "scripts": {
-    "dev": "node src/server.ts",
-    "format:check": "prettier . --check",
-    "format:fix": "prettier . --write"
-  },
-  "author": "Aidtya verma <vermaaditya860@gmail.com>",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/eslint__js": "^8.42.3",
-    "prettier": "3.3.3",
-    "typescript": "^5.5.4"
-  },
-  
+    "name": "auth-service",
+    "version": "1.0.0",
+    "description": "All auth services",
+    "main": "index.js",
+    "scripts": {
+        "dev": "node src/server.ts",
+        "format:check": "prettier . --check",
+        "format:fix": "prettier . --write"
+    },
+    "author": "Aidtya verma <vermaaditya860@gmail.com>",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/eslint__js": "^8.42.3",
+        "@types/node": "^22.9.1",
+        "prettier": "3.3.3",
+        "typescript": "^5.5.4"
+    },
     "lint-staged": {
-      "*.ts": ["npm run format:fix"]
+        "*.ts": [
+            "npm run format:fix"
+        ]
+    },
+    "dependencies": {
+        "dotenv": "^16.4.5"
     }
-  
 }
