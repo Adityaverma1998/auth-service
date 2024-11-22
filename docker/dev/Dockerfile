@@ -15,7 +15,7 @@ RUN npm install --include=dev
 COPY . .
 
 # Expose the port the app will run on
-EXPOSE 5555
+EXPOSE 5001
 
 # The command to run our app
 CMD ["npm", "run", "dev"]
