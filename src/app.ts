@@ -5,9 +5,9 @@ import createHttpError, { HttpError } from "http-errors";
 const app = express();
 
 app.get("/", async (req, res, next) => {
-    const err = createHttpError(401, "You can't access this router");
-    next(err);
-    // res.send("Welcome auth services");
+    // const err = createHttpError(401, "You can't access this router");
+    // next(err);
+    res.send("Welcome auth services");
 });
 
 // global error handling
