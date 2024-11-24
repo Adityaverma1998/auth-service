@@ -21,7 +21,6 @@ describe("POST request /auth/register", () => {
 
     afterAll(async () => {
         if (connection && connection.isInitialized) {
-            console.log("Destroying database connection...");
             await connection.destroy();
         }
     });
@@ -121,14 +120,12 @@ describe("POST request /auth/register", () => {
                 .post("/auth/register")
                 .send(userData);
             //Assert
-            const useRepository = connection.getRepository(User);
-            const users = await useRepository.find();
-            expect(users).toHaveLength(1);
-            expect(users[0].firstName).toBe(userData.firstName);
-            expect(users[0].lastName).toBe(userData.lastName);
-
-            expect(users[0].email).toBe(userData.email);
-            expect(typeof users[0].id).toBe("number");
+            expect(response.body).toHaveProperty("id");
+            const repository = connection.getRepository(User);
+            const users = await repository.find();
+            expect((response.body as Record<string, string>).id).toBe(
+                users[0].id,
+            );
         });
     });
     describe("fields are Missing ", () => {});

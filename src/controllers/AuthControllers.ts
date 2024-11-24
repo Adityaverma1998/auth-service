@@ -14,7 +14,6 @@ export class AuthControllers {
             email,
             password,
         });
-        console.log("check user reqgistration result", result);
 
         res.status(201).json({ id: result.id });
     }
