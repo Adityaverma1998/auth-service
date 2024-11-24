@@ -1,10 +1,20 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, {
+    NextFunction,
+    Request,
+    RequestHandler,
+    Response,
+    Express,
+} from "express";
 import logger from "./config/logger";
 import createHttpError, { HttpError } from "http-errors";
+import "reflect-metadata";
+import bodyParser from "body-parser";
 
 import authRouter from "./routes/auth";
 
-const app = express();
+const app: Express = express();
+app.use(bodyParser.json() as RequestHandler);
+app.use(bodyParser.urlencoded({ extended: true }) as RequestHandler);
 
 app.use("/auth", authRouter);
 
