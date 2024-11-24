@@ -8,13 +8,14 @@ export class AuthControllers {
     constructor(private userServices: UserService) {}
     async register(req: RegistrationUserRequest, res: Response) {
         const { firstName, lastName, email, password } = req.body;
-        await this.userServices.createUser({
+        const result = await this.userServices.createUser({
             firstName,
             lastName,
             email,
             password,
         });
+        console.log("check user reqgistration result", result);
 
-        res.status(201).json();
+        res.status(201).json({ id: result.id });
     }
 }

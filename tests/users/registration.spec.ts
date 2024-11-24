@@ -85,6 +85,51 @@ describe("POST request /auth/register", () => {
             expect(users).toHaveLength(1);
             expect(users[0].firstName).toBe(userData.firstName);
         });
+
+        it("should return the 201 status code ", async () => {
+            //AAA
+            //Arrange
+            const userData = {
+                firstName: "Aditya",
+                lastName: "Verma",
+                email: "vermaaditya860@gmail.com",
+                password: "secret",
+            };
+            //Act
+
+            const response = await request(app as any)
+                .post("/auth/register")
+                .send(userData);
+            //Assert
+            expect(response.headers["content-type"]).toEqual(
+                expect.stringContaining("json"),
+            );
+        });
+
+        it("should return user unique id ", async () => {
+            //AAA
+            //Arrange
+            const userData = {
+                firstName: "Adi",
+                lastName: "Verma",
+                email: "vermaaditya860@gmail.com",
+                password: "secret",
+            };
+            //Act
+
+            const response = await request(app as any)
+                .post("/auth/register")
+                .send(userData);
+            //Assert
+            const useRepository = connection.getRepository(User);
+            const users = await useRepository.find();
+            expect(users).toHaveLength(1);
+            expect(users[0].firstName).toBe(userData.firstName);
+            expect(users[0].lastName).toBe(userData.lastName);
+
+            expect(users[0].email).toBe(userData.email);
+            expect(typeof users[0].id).toBe("number");
+        });
     });
     describe("fields are Missing ", () => {});
 });
