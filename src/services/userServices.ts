@@ -8,6 +8,15 @@ import { Roles } from "../constants";
 export class UserService {
     constructor(private userRepository: Repository<User>) {}
     async createUser({ firstName, lastName, email, password }: UserData) {
+        const user = await this.userRepository.findOne({
+            where: { email: email },
+        });
+
+        if (user) {
+            const error = createHttpError(400, "Email  already Exists!");
+
+            throw error;
+        }
         try {
             const newUser = this.userRepository.create({
                 firstName,
