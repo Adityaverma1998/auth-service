@@ -4,7 +4,7 @@ import { User } from "../entity/User";
 import { RegistrationUserRequest } from "../types";
 import { UserService } from "../services/userServices";
 import { Logger } from "winston";
-
+import bcrypt from "bcrypt";
 export class AuthControllers {
     constructor(
         private userServices: UserService,
@@ -17,6 +17,11 @@ export class AuthControllers {
     ) {
         try {
             const { firstName, lastName, email, password } = req.body;
+
+            //Hash the password
+            const saltRound = 10;
+            const hashedPassword = await bcrypt.hash(password, saltRound);
+
             this.logger.debug("New request to the registerd user ", {
                 firstName,
                 lastName,
@@ -27,7 +32,7 @@ export class AuthControllers {
                 firstName,
                 lastName,
                 email,
-                password,
+                password: hashedPassword,
             });
             this.logger.info("User has been reqgistered", { id: result.id });
             res.status(201).json({ id: result.id });
