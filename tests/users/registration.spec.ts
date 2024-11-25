@@ -5,6 +5,7 @@ import { AppDataSource } from "../../src/config/data-source";
 import { truncate } from "fs";
 import { turncateTables } from "../utils";
 import app from "../../src/app";
+import { Roles } from "../../src/constants";
 describe("POST request /auth/register", () => {
     let connection: DataSource;
 
@@ -16,7 +17,9 @@ describe("POST request /auth/register", () => {
 
     beforeEach(async () => {
         //Database  truncate
-        await turncateTables(connection);
+        await connection.dropDatabase();
+        await connection.synchronize();
+        // await turncateTables(connection);
     });
 
     afterAll(async () => {
@@ -126,6 +129,47 @@ describe("POST request /auth/register", () => {
             expect((response.body as Record<string, string>).id).toBe(
                 users[0].id,
             );
+        });
+        it("should persist the user in the database", async () => {
+            //AAA
+            //Arrange
+            const userData = {
+                firstName: "Adi",
+                lastName: "Verma",
+                email: "vermaaditya860@gmail.com",
+                password: "secret",
+            };
+            //Act
+
+            const response = await request(app as any)
+                .post("/auth/register")
+                .send(userData);
+            //Assert
+            const useRepository = connection.getRepository(User);
+            const users = await useRepository.find();
+            expect(users).toHaveLength(1);
+            expect(users[0].firstName).toBe(userData.firstName);
+        });
+
+        it("should asign role to be customer", async () => {
+            //AAA
+            //Arrange
+            const userData = {
+                firstName: "Adi",
+                lastName: "Verma",
+                email: "vermaaditya860@gmail.com",
+                password: "secret",
+            };
+            //Act
+
+            const response = await request(app as any)
+                .post("/auth/register")
+                .send(userData);
+            //Assert
+            const useRepository = connection.getRepository(User);
+            const users = await useRepository.find();
+            expect(users[0]).toHaveProperty("role");
+            expect(users[0].role).toBe(Roles.CUSTOMER);
         });
     });
     describe("fields are Missing ", () => {});
