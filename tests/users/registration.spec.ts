@@ -243,10 +243,51 @@ describe("POST request /auth/register", () => {
         it("Should return 400 status code if First Name field is missing ", async () => {
             //Arrange
             const userData = {
-                firstName: "Adi",
+                firstName: "",
                 lastName: "Verma",
                 email: "vermaaditya860@gmail.com",
                 password: "secretpassword",
+            };
+            //Act
+
+            const response = await request(app as any)
+                .post("/auth/register")
+                .send(userData);
+
+            //Assert
+            const useRepository = connection.getRepository(User);
+            const users = await useRepository.find();
+            expect(users).toHaveLength(0);
+            expect(response.statusCode).toBe(400);
+        });
+
+        it("Should return 400 status code if last Name field is missing ", async () => {
+            //Arrange
+            const userData = {
+                firstName: "Aditya",
+                lastName: "",
+                email: "vermaaditya860@gmail.com",
+                password: "secretpassword",
+            };
+            //Act
+
+            const response = await request(app as any)
+                .post("/auth/register")
+                .send(userData);
+
+            //Assert
+            const useRepository = connection.getRepository(User);
+            const users = await useRepository.find();
+            expect(users).toHaveLength(0);
+            expect(response.statusCode).toBe(400);
+        });
+        it("Should return 400 status code if last Name field is missing ", async () => {
+            //Arrange
+            const userData = {
+                firstName: "Aditya",
+                lastName: "Verma",
+                email: "vermaaditya860@gmail.com",
+                password: "",
             };
             //Act
 
@@ -266,10 +307,10 @@ describe("POST request /auth/register", () => {
         it("should trim the email field", async () => {
             // Arrange
             const userData = {
-                firstName: "Rakesh",
-                lastName: "K",
-                email: " rakesh@mern.space ",
-                password: "password",
+                firstName: "Aditya",
+                lastName: "Verma",
+                email: "vermaaditya860@gmail.com",
+                password: "secretpassword",
             };
             // Act
             await request(app as any)
@@ -280,7 +321,45 @@ describe("POST request /auth/register", () => {
             const userRepository = connection.getRepository(User);
             const users = await userRepository.find();
             const user = users[0];
-            expect(user.email).toBe("rakesh@mern.space");
+            expect(user.email).toBe("vermaaditya860@gmail.com");
+        });
+        it("should return 400 status code if password length is less than 8 chars", async () => {
+            // Arrange
+            const userData = {
+                firstName: "Aditya",
+                lastName: "Verma",
+                email: "vermaaditya860@gmail.com",
+                password: "secret",
+            };
+            // Act
+            const response = await request(app as any)
+                .post("/auth/register")
+                .send(userData);
+
+            // Assert
+            expect(response.statusCode).toBe(400);
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users).toHaveLength(0);
+        });
+        it("shoud return an array of error messages if email is missing", async () => {
+            // Arrange
+            const userData = {
+                firstName: "Aditya",
+                lastName: "Verma",
+                email: "",
+                password: "secretpassword",
+            };
+            // Act
+            const response = await request(app as any)
+                .post("/auth/register")
+                .send(userData);
+
+            // Assert
+            expect(response.body).toHaveProperty("errors");
+            expect(
+                (response.body as Record<string, string>).errors.length,
+            ).toBeGreaterThan(0);
         });
     });
 });
