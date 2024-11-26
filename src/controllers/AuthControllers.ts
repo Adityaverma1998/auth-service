@@ -1,10 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { AppDataSource } from "../config/data-source";
 import { User } from "../entity/User";
-import { RegistrationUserRequest } from "../types";
+import { RegistrationUserRequest, UserData } from "../types";
 import { UserService } from "../services/userServices";
 import { Logger } from "winston";
 import bcrypt from "bcrypt";
+import { send } from "process";
+import createHttpError from "http-errors";
+import { validationResult } from "express-validator";
 export class AuthControllers {
     constructor(
         private userServices: UserService,
@@ -16,7 +19,13 @@ export class AuthControllers {
         next: NextFunction,
     ) {
         try {
-            const { firstName, lastName, email, password } = req.body;
+            // Validation
+            const validator = validationResult(req);
+            if (!validator.isEmpty()) {
+                return res.status(400).json({ errors: validator.array() });
+            }
+            const { firstName, lastName, email, password } =
+                req.body as UserData;
 
             //Hash the password
             const saltRound = 10;
@@ -28,6 +37,7 @@ export class AuthControllers {
                 email,
                 password: "*********",
             });
+
             const result = await this.userServices.createUser({
                 firstName,
                 lastName,

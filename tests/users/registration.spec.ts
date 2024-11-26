@@ -36,7 +36,7 @@ describe("POST request /auth/register", () => {
                 firstName: "Aditya",
                 lastName: "Verma",
                 email: "vermaaditya860@gmail.com",
-                password: "secret",
+                password: "secretpassword",
             };
             //Act
 
@@ -54,7 +54,7 @@ describe("POST request /auth/register", () => {
                 firstName: "Aditya",
                 lastName: "Verma",
                 email: "vermaaditya860@gmail.com",
-                password: "secret",
+                password: "secretpassword",
             };
             //Act
 
@@ -74,7 +74,7 @@ describe("POST request /auth/register", () => {
                 firstName: "Adi",
                 lastName: "Verma",
                 email: "vermaaditya860@gmail.com",
-                password: "secret",
+                password: "secretpassword",
             };
             //Act
 
@@ -95,7 +95,7 @@ describe("POST request /auth/register", () => {
                 firstName: "Aditya",
                 lastName: "Verma",
                 email: "vermaaditya860@gmail.com",
-                password: "secret",
+                password: "secretpassword",
             };
             //Act
 
@@ -115,7 +115,7 @@ describe("POST request /auth/register", () => {
                 firstName: "Adi",
                 lastName: "Verma",
                 email: "vermaaditya860@gmail.com",
-                password: "secret",
+                password: "secretpassword",
             };
             //Act
 
@@ -137,7 +137,7 @@ describe("POST request /auth/register", () => {
                 firstName: "Adi",
                 lastName: "Verma",
                 email: "vermaaditya860@gmail.com",
-                password: "secret",
+                password: "secretpassword",
             };
             //Act
 
@@ -158,7 +158,7 @@ describe("POST request /auth/register", () => {
                 firstName: "Adi",
                 lastName: "Verma",
                 email: "vermaaditya860@gmail.com",
-                password: "secret",
+                password: "secretpassword",
             };
             //Act
 
@@ -177,7 +177,7 @@ describe("POST request /auth/register", () => {
                 firstName: "Adi",
                 lastName: "Verma",
                 email: "vermaaditya860@gmail.com",
-                password: "secret",
+                password: "secretpassword",
             };
             //Act
 
@@ -200,7 +200,7 @@ describe("POST request /auth/register", () => {
                 firstName: "Adi",
                 lastName: "Verma",
                 email: "vermaaditya860@gmail.com",
-                password: "secret",
+                password: "secretpassword",
             };
             const useRepository = connection.getRepository(User);
             await useRepository.save({ ...userData, role: Roles.CUSTOMER });
@@ -218,5 +218,69 @@ describe("POST request /auth/register", () => {
             expect(users).toHaveLength(1);
         });
     });
-    describe("fields are Missing ", () => {});
+    describe("fields are Missing ", () => {
+        it("Should return 400 status code if email field is missing ", async () => {
+            //Arrange
+            const userData = {
+                firstName: "Adi",
+                lastName: "Verma",
+                email: "",
+                password: "secretpassword",
+            };
+            //Act
+
+            const response = await request(app as any)
+                .post("/auth/register")
+                .send(userData);
+
+            //Assert
+            const useRepository = connection.getRepository(User);
+            const users = await useRepository.find();
+            expect(users).toHaveLength(0);
+            expect(response.statusCode).toBe(400);
+        });
+
+        it("Should return 400 status code if First Name field is missing ", async () => {
+            //Arrange
+            const userData = {
+                firstName: "Adi",
+                lastName: "Verma",
+                email: "vermaaditya860@gmail.com",
+                password: "secretpassword",
+            };
+            //Act
+
+            const response = await request(app as any)
+                .post("/auth/register")
+                .send(userData);
+
+            //Assert
+            const useRepository = connection.getRepository(User);
+            const users = await useRepository.find();
+            expect(users).toHaveLength(0);
+            expect(response.statusCode).toBe(400);
+        });
+    });
+
+    describe("Fields are not in proper format", () => {
+        it("should trim the email field", async () => {
+            // Arrange
+            const userData = {
+                firstName: "Rakesh",
+                lastName: "K",
+                email: " rakesh@mern.space ",
+                password: "password",
+            };
+            // Act
+            await request(app as any)
+                .post("/auth/register")
+                .send(userData);
+
+            // Assert
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            const user = users[0];
+            expect(user.email).toBe("rakesh@mern.space");
+        });
+    });
 });

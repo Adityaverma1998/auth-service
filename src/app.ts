@@ -13,6 +13,8 @@ import bodyParser from "body-parser";
 import authRouter from "./routes/auth";
 
 const app: Express = express();
+app.use(express.json());
+
 app.use(bodyParser.json() as RequestHandler);
 app.use(bodyParser.urlencoded({ extended: true }) as RequestHandler);
 
