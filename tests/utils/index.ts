@@ -9,3 +9,22 @@ export const turncateTables = async (connection: DataSource) => {
         await repository.clear();
     }
 };
+
+export const isJwt = (token: String | null): boolean => {
+    let isJwtValid = false;
+    const parts = token?.split(".");
+    if (parts?.length != 3 || token === null) {
+        return isJwtValid;
+    }
+
+    try {
+        parts.forEach((part) => {
+            Buffer.from(part, "base64").toString("utf-8");
+        });
+        isJwtValid = true;
+
+        return isJwtValid;
+    } catch (err) {
+        return isJwtValid;
+    }
+};
