@@ -50,12 +50,8 @@ export class AuthControllers {
                 role: result.role,
             };
 
-            const MS_IN_YEARS = 100 * 60 * 60 * 24 * 365;
-            const refreshTokenRepo = AppDataSource.getRepository(RefreshToken);
-            const newRefrreshToken = await refreshTokenRepo.save({
-                user: result,
-                expiresAt: new Date(Date.now() + MS_IN_YEARS),
-            });
+            const newRefrreshToken =
+                await this.tokenService.persistRefreshToken(result);
 
             const accessToken = this.tokenService.generateTokens(payload);
             const refreshToken = this.tokenService.generateRefreshToken(
