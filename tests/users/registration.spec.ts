@@ -7,6 +7,7 @@ import app from "../../src/app";
 import { Roles } from "../../src/constants";
 import { cookie } from "express-validator";
 import { isJwt } from "../utils";
+import { RefreshToken } from "../../src/entity/RefreshToken";
 describe("POST request /auth/register", () => {
     let connection: DataSource;
 
@@ -259,6 +260,33 @@ describe("POST request /auth/register", () => {
 
             expect(isJwt(accessToken)).toBeTruthy();
             expect(isJwt(refreshToken)).toBeTruthy();
+        });
+
+        it("should store  the refresh token in the database", async () => {
+            // Arrange
+            const userData = {
+                firstName: "Rakesh",
+                lastName: "K",
+                email: "rakesh@mern.space",
+                password: "password",
+            };
+
+            // Act
+            const response = await request(app as any)
+                .post("/auth/register")
+                .send(userData);
+
+            // Assert
+            const refreshTokenRepo = connection.getRepository(RefreshToken);
+            const refreshTokens = await refreshTokenRepo.find();
+            expect(refreshTokens).toHaveLength(1);
+            const tokens = await refreshTokenRepo
+                .createQueryBuilder("refreshToken")
+                .where("refreshToken.userId=:userId", {
+                    userId: response.body.id,
+                })
+                .getMany();
+            expect(tokens).toHaveLength(1);
         });
     });
     describe("fields are Missing ", () => {
