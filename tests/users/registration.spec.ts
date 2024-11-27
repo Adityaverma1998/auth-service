@@ -2,6 +2,7 @@ import request from "supertest";
 import { User } from "../../src/entity/User";
 import { DataSource } from "typeorm";
 import { AppDataSource } from "../../src/config/data-source";
+
 import { truncate } from "fs";
 import app from "../../src/app";
 import { Roles } from "../../src/constants";
@@ -352,7 +353,7 @@ describe("POST request /auth/register", () => {
             expect(users).toHaveLength(0);
             expect(response.statusCode).toBe(400);
         });
-        it("Should return 400 status code if last Name field is missing ", async () => {
+        it("Should return 400 status code if Password field is missing ", async () => {
             //Arrange
             const userData = {
                 firstName: "Aditya",
