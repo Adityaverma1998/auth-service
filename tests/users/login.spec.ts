@@ -40,7 +40,7 @@ describe("POST request /auth/register", () => {
                 .post("/auth/login")
                 .send(userData);
             //Assert
-            expect(response.statusCode).toBe(201);
+            expect(response.statusCode).toBe(200);
         });
         it("should if user id  and password are same return the 200 status code ", async () => {
             //AAA
